@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String SCORE_KEY = "SCORE";
+    private final String INDEX_KEY = "INDEX";
     private Button btnTrue;
     private Button btnWrong;
     private TextView txtQuestionView;
@@ -39,6 +43,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState!=null){
+            userScore = savedInstanceState.getInt(SCORE_KEY);
+            quizQuestionIndex = savedInstanceState.getInt(INDEX_KEY);
+        }else {
+            userScore = 0;
+            quizQuestionIndex= 0;
+        }
+
+        Toast.makeText(getApplicationContext(),"OnCreate method start",Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_main);
 
         btnTrue = findViewById(R.id.btnTrue);
@@ -52,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.quizPB);
         txtStatsView = findViewById(R.id.txtQuizStats);
+        txtStatsView.setText(userScore+"");
 
         //True button
         btnTrue.setOnClickListener(new View.OnClickListener() {
@@ -102,5 +117,54 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), R.string.incorrect_toast_message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        //it called after onCreate method
+        super.onStart();
+        Toast.makeText(getApplicationContext(),"OnStart method start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        //it called after onStart Method
+        super.onResume();
+        Toast.makeText(getApplicationContext(),"OnResume method start",Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    protected void onPause() {
+        //it called when user press the recent button
+        //In recent memu app is visible but not intarect to the user. so it called onPause
+        super.onPause();
+        Toast.makeText(getApplicationContext(),"OnPause method start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        //it called when user Pressed home button
+        //also it called when user Pressed recent button
+        //it need when we play video in the app .Then if user can pressed home button that time we need to pause or stop the video in the app.Otherwise it will running background
+        super.onStop();
+        Toast.makeText(getApplicationContext(),"OnStop method start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //it called when we close our application
+        //when close the application also called onPause,onStop method
+        super.onDestroy();
+        Toast.makeText(getApplicationContext(),"OnDestroy method start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+
+        //এই মেথড টাকে ব্যবহার করি তখন যখন আমাদের Portrait mode thaka landscape mode যাবো তখন Portrait থাকাকালিন সব ডাটা সেভ করে রাখার জন্য। কারন landscape গেলে পুরো App টা আবার নতুন করে শুরু
+        super.onSaveInstanceState(outState);
+        outState.putInt(SCORE_KEY,userScore);
+        outState.putInt(INDEX_KEY,quizQuestionIndex);
     }
 }
